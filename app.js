@@ -9,6 +9,7 @@ const themeToggle = document.querySelector("#theme-toggle");
 const themeIcon = document.querySelector(".theme-icon");
 const themeLabel = document.querySelector(".theme-label");
 const filterButtons = document.querySelectorAll(".filter-button");
+const clearCompletedButton = document.querySelector("#clear-completed");
 
 let todos = loadTodos();
 let currentFilter = "all";
@@ -118,7 +119,9 @@ function renderTodos() {
   });
 
   const unfinishedCount = todos.filter((todo) => !todo.completed).length;
+  const completedCount = todos.filter((todo) => todo.completed).length;
   remainingCount.textContent = `未完成:${unfinishedCount} 項`;
+  clearCompletedButton.disabled = completedCount === 0;
 }
 
 themeToggle.addEventListener("click", () => {
@@ -137,6 +140,18 @@ filterButtons.forEach((button) => {
     });
     renderTodos();
   });
+});
+
+clearCompletedButton.addEventListener("click", () => {
+  const completedCount = todos.filter((todo) => todo.completed).length;
+
+  if (completedCount === 0 || !window.confirm("確定要清除所有已完成的待辦事項嗎？")) {
+    return;
+  }
+
+  todos = todos.filter((todo) => !todo.completed);
+  saveTodos();
+  renderTodos();
 });
 
 todoForm.addEventListener("submit", (event) => {
