@@ -263,6 +263,30 @@ button:active {
   font-size: 0.85rem;
 }
 
+.footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.clear-completed-button {
+  padding: 5px 7px;
+  color: var(--color-danger);
+  background: transparent;
+  font-size: 0.83rem;
+}
+
+.clear-completed-button:hover:not(:disabled),
+.clear-completed-button:focus-visible:not(:disabled) {
+  background: var(--color-danger-hover);
+}
+
+.clear-completed-button:disabled {
+  color: var(--color-muted);
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 .footer-mark {
   color: var(--color-accent);
   font-weight: 700;
