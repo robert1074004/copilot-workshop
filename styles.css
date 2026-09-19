@@ -1,6 +1,11 @@
 :root {
   --color-background: #eef3f0;
+  --color-background-glow: rgba(240, 179, 91, 0.18);
+  --color-background-glow-secondary: rgba(36, 123, 104, 0.15);
   --color-card: #fffdf8;
+  --color-card-border: rgba(255, 255, 255, 0.8);
+  --color-surface: #f7faf7;
+  --color-on-primary: #fff;
   --color-text: #24312d;
   --color-muted: #7b8983;
   --color-border: #dce5df;
@@ -8,9 +13,30 @@
   --color-primary-dark: #1b5e51;
   --color-accent: #f0b35b;
   --color-danger: #be665e;
+  --color-danger-hover: rgba(190, 102, 94, 0.1);
+  --color-focus: rgba(36, 123, 104, 0.13);
   --shadow-card: 0 20px 55px rgba(43, 70, 61, 0.12);
   --radius-card: 24px;
   --radius-control: 12px;
+}
+
+html[data-theme="dark"] {
+  --color-background: #172522;
+  --color-background-glow: rgba(240, 179, 91, 0.1);
+  --color-background-glow-secondary: rgba(77, 173, 146, 0.12);
+  --color-card: #243631;
+  --color-card-border: rgba(255, 255, 255, 0.08);
+  --color-surface: #1d2d29;
+  --color-on-primary: #172522;
+  --color-text: #edf5f0;
+  --color-muted: #a7b9b1;
+  --color-border: #3b514a;
+  --color-primary: #65c6a5;
+  --color-primary-dark: #86d8ba;
+  --color-danger: #ef958a;
+  --color-danger-hover: rgba(239, 149, 138, 0.12);
+  --color-focus: rgba(101, 198, 165, 0.2);
+  --shadow-card: 0 20px 55px rgba(0, 0, 0, 0.28);
 }
 
 * {
@@ -25,8 +51,8 @@ body {
   place-items: center;
   color: var(--color-text);
   background:
-    radial-gradient(circle at 15% 15%, rgba(240, 179, 91, 0.18), transparent 25%),
-    radial-gradient(circle at 85% 85%, rgba(36, 123, 104, 0.15), transparent 28%),
+    radial-gradient(circle at 15% 15%, var(--color-background-glow), transparent 25%),
+    radial-gradient(circle at 85% 85%, var(--color-background-glow-secondary), transparent 28%),
     var(--color-background);
   font-family: "Trebuchet MS", "Noto Sans TC", sans-serif;
 }
@@ -35,13 +61,20 @@ body {
   width: min(100%, 520px);
   padding: clamp(24px, 6vw, 42px);
   background: var(--color-card);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--color-card-border);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
 }
 
 .todo-header {
   margin-bottom: 28px;
+}
+
+.heading-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
 }
 
 .eyebrow {
@@ -64,6 +97,29 @@ h1 {
   font-size: 0.95rem;
 }
 
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 0 auto;
+  padding: 8px 10px;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  font-size: 0.78rem;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible,
+.filter-button:hover,
+.filter-button:focus-visible {
+  border-color: var(--color-primary);
+}
+
+.theme-icon {
+  font-size: 1rem;
+}
+
 .todo-form {
   display: flex;
   gap: 10px;
@@ -75,7 +131,7 @@ h1 {
   flex: 1;
   padding: 13px 15px;
   color: var(--color-text);
-  background: #f7faf7;
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-control);
   outline: none;
@@ -84,7 +140,7 @@ h1 {
 
 .todo-form input:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(36, 123, 104, 0.13);
+  box-shadow: 0 0 0 3px var(--color-focus);
 }
 
 button {
@@ -98,8 +154,28 @@ button {
 
 .todo-form button {
   padding: 0 20px;
-  color: #fff;
+  color: var(--color-on-primary);
   background: var(--color-primary);
+}
+
+.filter-nav {
+  display: flex;
+  gap: 8px;
+  margin: -8px 0 20px;
+}
+
+.filter-button {
+  padding: 8px 13px;
+  color: var(--color-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  font-size: 0.85rem;
+}
+
+.filter-button.is-active {
+  color: var(--color-primary);
+  background: var(--color-surface);
+  border-color: var(--color-border);
 }
 
 .todo-form button:hover,
@@ -136,7 +212,7 @@ button:active {
   align-items: center;
   gap: 12px;
   padding: 13px 12px;
-  background: #f7faf7;
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-control);
   animation: item-in 220ms ease both;
@@ -173,7 +249,7 @@ button:active {
 
 .delete-button:hover,
 .delete-button:focus-visible {
-  background: rgba(190, 102, 94, 0.1);
+  background: var(--color-danger-hover);
 }
 
 .todo-footer {
@@ -226,5 +302,14 @@ button:active {
 
   .todo-form button {
     min-height: 44px;
+  }
+
+  .heading-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .theme-toggle {
+    align-self: flex-start;
   }
 }
