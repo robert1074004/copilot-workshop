@@ -15,6 +15,8 @@ let todos = loadTodos();
 let currentFilter = "all";
 
 const THEME_STORAGE_KEY = "offline-todo-theme";
+const FILTER_STORAGE_KEY = "offline-todo-filter";
+const VALID_FILTERS = ["all", "active", "completed"];
 const systemThemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
 // 從瀏覽器的 localStorage 讀取既有待辦，資料損壞時回傳空清單。
@@ -43,6 +45,20 @@ function applyTheme(theme) {
 
 function getInitialTheme() {
   return localStorage.getItem(THEME_STORAGE_KEY) || (systemThemeQuery.matches ? "dark" : "light");
+}
+
+function getInitialFilter() {
+  const savedFilter = localStorage.getItem(FILTER_STORAGE_KEY);
+  return VALID_FILTERS.includes(savedFilter) ? savedFilter : "all";
+}
+
+function applyFilter(filter) {
+  currentFilter = filter;
+  filterButtons.forEach((filterButton) => {
+    const isSelected = filterButton.dataset.filter === currentFilter;
+    filterButton.classList.toggle("is-active", isSelected);
+    filterButton.setAttribute("aria-pressed", String(isSelected));
+  });
 }
 
 systemThemeQuery.addEventListener("change", (event) => {
@@ -132,12 +148,8 @@ themeToggle.addEventListener("click", () => {
 
 filterButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    currentFilter = button.dataset.filter;
-    filterButtons.forEach((filterButton) => {
-      const isSelected = filterButton === button;
-      filterButton.classList.toggle("is-active", isSelected);
-      filterButton.setAttribute("aria-pressed", String(isSelected));
-    });
+    applyFilter(button.dataset.filter);
+    localStorage.setItem(FILTER_STORAGE_KEY, currentFilter);
     renderTodos();
   });
 });
@@ -176,4 +188,5 @@ todoForm.addEventListener("submit", (event) => {
 });
 
 applyTheme(getInitialTheme());
+applyFilter(getInitialFilter());
 renderTodos();
